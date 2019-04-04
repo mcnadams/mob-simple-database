@@ -5,19 +5,20 @@ const rimraf = require('rimraf');
 const fs = require('fs'); 
 const rootDirectory = path.join(__dirname,'../', 'animals');
 
+let store;
+
 describe('Store class', () => {
   beforeEach(done => {
     mkdirp(rootDirectory, done);
+    store = new Store(rootDirectory);
   });
  afterEach(done => {
    rimraf(rootDirectory, done);
  });
   it('binds directory path in store', () => {
-    const store = new Store(rootDirectory);
     expect(store.rootDirectory).toBe(rootDirectory);
   });
   it('creates a file', done => {
-    const store = new Store(rootDirectory);
     const kittems = {
       name: 'Kizmar'
     }
@@ -25,17 +26,31 @@ describe('Store class', () => {
       if(err){
         throw err;
       }
-
       expect(savedObject._id).toEqual(expect.any(String));
       const id = savedObject._id;
-      //read saved file by id
       const filePath = `${store.rootDirectory}/${id}`;
       fs.readFile(filePath, 'utf8', (err, data) => { 
         const parsedData = JSON.parse(data);
         expect(parsedData).toEqual(savedObject);
         done();
       });
-      //compare to saved object
     });   
-  })
+  });
+
+  it('finds an file by id and parses object', done => {
+    const puppers = {
+      name: 'puppers'
+    }
+    store.create(puppers, (err, objectToFind) => {
+      console.log('new object', objectToFind);
+      expect(err).toBeFalsy();
+      store.findById(objectToFind._id, (error, objectFromFile) => {
+        expect(objectFromFile).toEqual(objectToFind);
+        done();
+      });
+    });
+    //create uuid
+    //create file with that uuid
+    //findbyid
+  });
 });

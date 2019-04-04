@@ -93,20 +93,10 @@ describe('Store class', () => {
         newArray.push(newThing);
         store.find((err, arrayOfObjects) => {
           if(err) done(err);
-          console.log(newArray, 'new array');
-          console.log(arrayOfObjects, 'array of objects');
           expect(newArray.sort()).toEqual(arrayOfObjects);
           done();
         })
       });
     });
-
-
-    // find((err, arrayOfObjects) => {
-    //   expect(arrayOfObjects).toEqual(newObjects);
-    //   done();
-
-    // });
-
   });
 });

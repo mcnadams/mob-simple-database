@@ -28,7 +28,7 @@ Here is an example of how your module would be imported (required) and used:
 ```js
 
 const Store = require('../lib/store');
-const rootDirectory = path.join(__dirname, 'animals');
+const rootDirectory = path.join(__dirname,'animals');
 const store = new Store(rootDirectory);
 
 store.create({ name: 'garfield' }, (err, animal) => {

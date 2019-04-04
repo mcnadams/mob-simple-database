@@ -49,8 +49,11 @@ describe('Store class', () => {
         done();
       });
     });
-    //create uuid
-    //create file with that uuid
-    //findbyid
+  });
+  it('searches a nonexistent file by id and returns null', done => {
+    store.findById('fakeID', (error, objectFromFile) => {
+      expect(objectFromFile).toEqual(null);
+      done();
+    });
   });
 });

@@ -93,10 +93,20 @@ describe('Store class', () => {
         newArray.push(newThing);
         store.find((err, arrayOfObjects) => {
           if(err) done(err);
-          expect(newArray.sort()).toEqual(arrayOfObjects);
-          done();
-        })
+          arrayOfObjects.forEach(item => {
+            expect(newArray).toContainEqual(item);
+            done();
+          });
+        });
       });
     });
+
+
+    // find((err, arrayOfObjects) => {
+    //   expect(arrayOfObjects).toEqual(newObjects);
+    //   done();
+
+    // });
+
   });
 });

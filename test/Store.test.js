@@ -75,7 +75,6 @@ describe('Store class', () => {
     })
   });
   it('finds all objects in store and returns in an array', done => {
-    //create a newObjectsArray
     const newObjects = [
       {
         name: 'Bonnie'
@@ -100,13 +99,5 @@ describe('Store class', () => {
         });
       });
     });
-
-
-    // find((err, arrayOfObjects) => {
-    //   expect(arrayOfObjects).toEqual(newObjects);
-    //   done();
-
-    // });
-
   });
 });

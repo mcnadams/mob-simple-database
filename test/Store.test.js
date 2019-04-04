@@ -2,8 +2,8 @@ const Store = require('../lib/Store');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
-const fs = require('fs'); 
-const rootDirectory = path.join(__dirname,'../', 'animals');
+const fs = require('fs');
+const rootDirectory = path.join(__dirname, '../', 'animals');
 
 let store;
 
@@ -12,9 +12,9 @@ describe('Store class', () => {
     mkdirp(rootDirectory, done);
     store = new Store(rootDirectory);
   });
- afterEach(done => {
-   rimraf(rootDirectory, done);
- });
+  afterEach(done => {
+    rimraf(rootDirectory, done);
+  });
   it('binds directory path in store', () => {
     expect(store.rootDirectory).toBe(rootDirectory);
   });
@@ -23,18 +23,18 @@ describe('Store class', () => {
       name: 'Kizmar'
     }
     store.create(kittems, (err, savedObject) => {
-      if(err){
+      if (err) {
         throw err;
       }
       expect(savedObject._id).toEqual(expect.any(String));
       const id = savedObject._id;
       const filePath = `${store.rootDirectory}/${id}`;
-      fs.readFile(filePath, 'utf8', (err, data) => { 
+      fs.readFile(filePath, 'utf8', (err, data) => {
         const parsedData = JSON.parse(data);
         expect(parsedData).toEqual(savedObject);
         done();
       });
-    });   
+    });
   });
 
   it('finds an file by id and parses object', done => {
@@ -55,5 +55,25 @@ describe('Store class', () => {
       expect(objectFromFile).toEqual(null);
       done();
     });
+  });
+  it('find by ID and delete', done => {
+    const puppers = {
+      name: 'puppers'
+    }
+    store.create(puppers, (err, objectToFind) => {
+      console.log('new object', objectToFind);
+      expect(err).toBeFalsy();
+      store.findById(objectToFind._id, (error, objectFromFile) => {
+        expect(objectFromFile).toEqual(objectToFind);
+        store.findByIdAndDelete(objectFromFile._id, (err, object)=>
+        {
+          if(err){
+            throw err;
+          }
+          expect(object.deleted).toBe(1)
+        })
+        done();
+      });
+    })
   });
 });

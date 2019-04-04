@@ -21,5 +21,9 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "jest": "^24.7.0"
+  },
+  "dependencies": {
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.3"
   }
 }

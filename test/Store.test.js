@@ -42,7 +42,6 @@ describe('Store class', () => {
       name: 'puppers'
     }
     store.create(puppers, (err, objectToFind) => {
-      console.log('new object', objectToFind);
       expect(err).toBeFalsy();
       store.findById(objectToFind._id, (error, objectFromFile) => {
         expect(objectFromFile).toEqual(objectToFind);
@@ -61,7 +60,6 @@ describe('Store class', () => {
       name: 'puppers'
     }
     store.create(puppers, (err, objectToFind) => {
-      console.log('new object', objectToFind);
       expect(err).toBeFalsy();
       store.findById(objectToFind._id, (error, objectFromFile) => {
         expect(objectFromFile).toEqual(objectToFind);
@@ -75,5 +73,40 @@ describe('Store class', () => {
         done();
       });
     })
+  });
+  it('finds all objects in store and returns in an array', done => {
+    //create a newObjectsArray
+    const newObjects = [
+      {
+        name: 'Bonnie'
+      },
+      {
+        name: 'Olli'
+      }
+    ];
+    let newArray = [];
+    store.create(newObjects[0], (err, newThing) => {
+      if(err) done(err);
+      newArray.push(newThing);
+      store.create(newObjects[1], (err, newThing) => {
+        if(err) done(err);
+        newArray.push(newThing);
+        store.find((err, arrayOfObjects) => {
+          if(err) done(err);
+          console.log(newArray, 'new array');
+          console.log(arrayOfObjects, 'array of objects');
+          expect(newArray.sort()).toEqual(arrayOfObjects);
+          done();
+        })
+      });
+    });
+
+
+    // find((err, arrayOfObjects) => {
+    //   expect(arrayOfObjects).toEqual(newObjects);
+    //   done();
+
+    // });
+
   });
 });

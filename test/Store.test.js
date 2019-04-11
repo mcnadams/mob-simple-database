@@ -3,12 +3,13 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 const fs = require('fs');
+const fsPromise = require('fs').promises;
 const rootDirectory = path.join(__dirname, '../', 'animals');
 
 let store;
 
 describe('Store class', () => {
-  
+
   beforeEach(done => {
     mkdirp(rootDirectory, done);
     store = new Store(rootDirectory);
@@ -21,7 +22,7 @@ describe('Store class', () => {
     expect(store.rootDirectory).toBe(rootDirectory);
   });
 
-  it('creates a file', done => {
+  it('creates a file', () => {
     const kittems = {
       name: 'Kizmar'
     };
@@ -33,11 +34,11 @@ describe('Store class', () => {
       .then(savedObject => {
         const id = savedObject._id;
         const filePath = `${store.rootDirectory}/${id}`;
-        fs.readFile(filePath, 'utf8', (err, data) => {
-          const parsedData = JSON.parse(data);
-          expect(parsedData).toEqual(savedObject);
-          done();
-        });
+        return fsPromise.readFile(filePath, 'utf8')
+          .then(data => {
+            const parsedData = JSON.parse(data);
+            expect(parsedData).toEqual(savedObject);
+          });
       });
   });
 
@@ -47,10 +48,17 @@ describe('Store class', () => {
     };
     return store.create(puppers)
       .then(objectToFind => {
-        return store.findById(objectToFind._id)
-          .then(objectFromFile => {
-            expect(objectFromFile).toEqual(objectToFind);
-          });
+        return Promise.all([
+          Promise.resolve(objectToFind),
+          store.findById(objectToFind._id)
+        ]);
+        // return store.findById(objectToFind._id)
+        //   .then(objectFromFile => {
+        //     expect(objectFromFile).toEqual(objectToFind);
+        //   });
+      })
+      .then(([createdObject, foundObject]) => {
+        expect(foundObject).toEqual(createdObject);
       });
   });
 

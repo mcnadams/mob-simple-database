@@ -8,6 +8,7 @@ const rootDirectory = path.join(__dirname, '../', 'animals');
 let store;
 
 describe('Store class', () => {
+  
   beforeEach(done => {
     mkdirp(rootDirectory, done);
     store = new Store(rootDirectory);
@@ -15,9 +16,11 @@ describe('Store class', () => {
   afterEach(done => {
     rimraf(rootDirectory, done);
   });
+
   it('binds directory path in store', () => {
     expect(store.rootDirectory).toBe(rootDirectory);
   });
+
   it('creates a file', done => {
     const kittems = {
       name: 'Kizmar'
@@ -38,24 +41,24 @@ describe('Store class', () => {
       });
   });
 
-  it.only('finds an file by id and parses object', done => {
+  it.only('finds an file by id and parses object', () => {
     const puppers = {
       name: 'puppers'
     };
     return store.create(puppers)
       .then(objectToFind => {
-        store.findById(objectToFind._id, (error, objectFromFile) => {
-          expect(objectFromFile).toEqual(objectToFind);
-          done();
-        });
+        return store.findById(objectToFind._id)
+          .then(objectFromFile => {
+            expect(objectFromFile).toEqual(objectToFind);
+          });
       });
   });
-  it('searches a nonexistent file by id and returns null', done => {
-    store.findById('fakeID', (error, objectFromFile) => {
-      expect(objectFromFile).toEqual(null);
-      done();
-    });
+
+  it('searches a nonexistent file by id and returns null', () => {
+    return store.findById('fakeID')
+      .then(objectFromFile => expect(objectFromFile).toEqual(null));
   });
+
   it('find by ID and delete', done => {
     const puppers = {
       name: 'puppers'

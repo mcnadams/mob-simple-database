@@ -52,10 +52,6 @@ describe('Store class', () => {
           Promise.resolve(objectToFind),
           store.findById(objectToFind._id)
         ]);
-        // return store.findById(objectToFind._id)
-        //   .then(objectFromFile => {
-        //     expect(objectFromFile).toEqual(objectToFind);
-        //   });
       })
       .then(([createdObject, foundObject]) => {
         expect(foundObject).toEqual(createdObject);
@@ -86,6 +82,7 @@ describe('Store class', () => {
       });
     });
   });
+
   it('finds all objects in store and returns in an array', done => {
     const newObjects = [
       {

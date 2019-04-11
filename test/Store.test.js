@@ -18,7 +18,7 @@ describe('Store class', () => {
   it('binds directory path in store', () => {
     expect(store.rootDirectory).toBe(rootDirectory);
   });
-  it.only('creates a file', done => {
+  it('creates a file', done => {
     const kittems = {
       name: 'Kizmar'
     };
@@ -38,17 +38,17 @@ describe('Store class', () => {
       });
   });
 
-  it('finds an file by id and parses object', done => {
+  it.only('finds an file by id and parses object', done => {
     const puppers = {
       name: 'puppers'
     };
-    store.create(puppers, (err, objectToFind) => {
-      expect(err).toBeFalsy();
-      store.findById(objectToFind._id, (error, objectFromFile) => {
-        expect(objectFromFile).toEqual(objectToFind);
-        done();
+    return store.create(puppers)
+      .then(objectToFind => {
+        store.findById(objectToFind._id, (error, objectFromFile) => {
+          expect(objectFromFile).toEqual(objectToFind);
+          done();
+        });
       });
-    });
   });
   it('searches a nonexistent file by id and returns null', done => {
     store.findById('fakeID', (error, objectFromFile) => {

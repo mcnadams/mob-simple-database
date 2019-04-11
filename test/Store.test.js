@@ -18,29 +18,30 @@ describe('Store class', () => {
   it('binds directory path in store', () => {
     expect(store.rootDirectory).toBe(rootDirectory);
   });
-  it('creates a file', done => {
+  it.only('creates a file', done => {
     const kittems = {
       name: 'Kizmar'
-    }
-    store.create(kittems, (err, savedObject) => {
-      if (err) {
-        throw err;
-      }
-      expect(savedObject._id).toEqual(expect.any(String));
-      const id = savedObject._id;
-      const filePath = `${store.rootDirectory}/${id}`;
-      fs.readFile(filePath, 'utf8', (err, data) => {
-        const parsedData = JSON.parse(data);
-        expect(parsedData).toEqual(savedObject);
-        done();
+    };
+    return store.create(kittems)
+      .then(savedObject => {
+        expect(savedObject._id).toEqual(expect.any(String));
+        return savedObject;
+      })
+      .then(savedObject => {
+        const id = savedObject._id;
+        const filePath = `${store.rootDirectory}/${id}`;
+        fs.readFile(filePath, 'utf8', (err, data) => {
+          const parsedData = JSON.parse(data);
+          expect(parsedData).toEqual(savedObject);
+          done();
+        });
       });
-    });
   });
 
   it('finds an file by id and parses object', done => {
     const puppers = {
       name: 'puppers'
-    }
+    };
     store.create(puppers, (err, objectToFind) => {
       expect(err).toBeFalsy();
       store.findById(objectToFind._id, (error, objectFromFile) => {
@@ -58,7 +59,7 @@ describe('Store class', () => {
   it('find by ID and delete', done => {
     const puppers = {
       name: 'puppers'
-    }
+    };
     store.create(puppers, (err, objectToFind) => {
       expect(err).toBeFalsy();
       store.findById(objectToFind._id, (error, objectFromFile) => {
@@ -68,11 +69,11 @@ describe('Store class', () => {
           if(err){
             throw err;
           }
-          expect(object.deleted).toBe(1)
-        })
+          expect(object.deleted).toBe(1);
+        });
         done();
       });
-    })
+    });
   });
   it('finds all objects in store and returns in an array', done => {
     const newObjects = [
